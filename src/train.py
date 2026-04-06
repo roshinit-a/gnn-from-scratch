@@ -1,15 +1,14 @@
 import os
 import time
+import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from dataset import load_data
 from model import GCN
 
-# Hyperparameters / Config
-LR = 0.01
+# Fixed hyperparameters (not exposed as CLI args)
 WEIGHT_DECAY = 5e-4
-EPOCHS = 200
 HIDDEN_DIM = 16
 DROPOUT = 0.5
 CHECKPOINT_DIR = "../results"
@@ -33,7 +32,18 @@ def accuracy(logits, labels):
 def main():
     """
     Main training script.
+
+    Supports CLI arguments:
+        --epochs  Number of training epochs (default: 200)
+        --lr      Learning rate for the Adam optimizer (default: 0.01)
     """
+    parser = argparse.ArgumentParser(description="Train a 2-layer GCN on the Cora dataset.")
+    parser.add_argument("--epochs", type=int, default=200,
+                        help="Number of training epochs (default: 200)")
+    parser.add_argument("--lr", type=float, default=0.01,
+                        help="Learning rate for Adam optimizer (default: 0.01)")
+    args = parser.parse_args()
+
     # Ensure results directory exists
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
     
@@ -52,14 +62,14 @@ def main():
                 n_classes=n_classes, 
                 dropout_rate=DROPOUT)
     
-    optimizer = optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
+    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=WEIGHT_DECAY)
     criterion = nn.CrossEntropyLoss()
     
     best_val_acc = 0.0
     
     # 3. Training Loop
     start_time = time.time()
-    for epoch in range(EPOCHS):
+    for epoch in range(args.epochs):
         model.train()
         optimizer.zero_grad()
         
