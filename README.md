@@ -12,7 +12,7 @@ A Graph Neural Network (GNN) is a class of neural network that operates directly
 
 ## 2. Why Does Graph Structure Help?
 
-In the Cora citation network, papers that cite each other tend to be about the same research topic — a property known as **homophily**. A plain MLP ignores this entirely: it classifies each paper using only its own bag-of-words features, achieving around **~57% accuracy**. When we use a GCN that additionally aggregates the features of each paper's neighbors, the model can exploit citation patterns as a powerful signal, pushing accuracy to **~81%** — a ~24 percentage point gain with *zero* extra data. The graph is, in effect, a free source of structural supervision.
+In the Cora citation network, papers that cite each other tend to be about the same research topic — a property known as **homophily**. A plain MLP ignores this entirely: it classifies each paper using only its own bag-of-words features, achieving **50.2% accuracy**. When we use a GCN that additionally aggregates the features of each paper's neighbors, the model can exploit citation patterns as a powerful signal, pushing accuracy to **73.0%** — a ~22.8 percentage point gain with *zero* extra data. The graph is, in effect, a free source of structural supervision.
 
 ---
 
@@ -55,8 +55,8 @@ After two layers, every node has "seen" information from its 2-hop neighborhood.
 
 | Model | Test Accuracy | Notes |
 |-------|:---:|-------|
-| 2-Layer MLP | ~57% | Bag-of-words features only, no graph structure used |
-| 2-Layer GCN | ~81% | Same features + symmetric normalized adjacency; +24pp gain |
+| 2-Layer MLP | 50.2% | Bag-of-words features only, no graph structure used |
+| 2-Layer GCN | **73.0%** | Same features + symmetric normalized adjacency; +22.8pp gain |
 
 ---
 
