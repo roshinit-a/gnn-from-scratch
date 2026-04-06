@@ -70,11 +70,11 @@ The side-by-side t-SNE below shows the hidden embeddings of all 2708 Cora nodes,
 - **MLP**: Classes overlap heavily — the model relies on text words alone.  
 - **GCN**: Distinct, well-separated clusters emerge because neighboring nodes pull each other's representations closer.
 
-*(Run Notebook 03 → `results/tsne_comparison.png`)*
+![t-SNE comparison: MLP vs GCN node embeddings](results/tsne_comparison.png)
 
 ### Accuracy Comparison Bar Chart
 
-*(Run Notebook 03 → `results/accuracy_comparison.png`)*
+![Accuracy comparison: MLP vs GCN](results/accuracy_comparison.png)
 
 ---
 
@@ -104,6 +104,12 @@ python train.py
 
 The Cora dataset is **downloaded automatically** on first run. Training takes ~10 seconds on CPU. The best model is saved to `results/best_gcn_model.pth`.
 
+You can also override the default hyperparameters via CLI:
+
+```bash
+python train.py --epochs 300 --lr 0.005
+```
+
 ### Explore Notebooks
 
 ```bash
@@ -118,7 +124,19 @@ Open in order:
 
 ---
 
-## 8. What's Next
+## 8. Limitations
+
+This implementation is intentionally minimal and pedagogical. Key assumptions and constraints to be aware of:
+
+- **Homophily assumption** — GCN's aggregation scheme is most effective when connected nodes share the same label. On heterophilic graphs (e.g., social networks where opposites connect), neighborhood aggregation can actually *hurt* accuracy compared to a plain MLP.
+- **Over-smoothing** — Stacking many GCN layers causes node embeddings to converge to indistinguishable values (all nodes look the same). 2 layers is intentional; going beyond 3–4 typically degrades performance.
+- **Transductive setting** — The model is trained and tested on the same fixed graph. Generalizing to entirely unseen nodes or graphs requires inductive methods (e.g., GraphSAGE, GAT with sampling).
+- **Scalability** — The full adjacency matrix is held in memory as a sparse tensor. This works for Cora (2708 nodes) but does not scale to graphs with millions of nodes without mini-batch neighbor sampling.
+- **Fixed graph structure** — The learned representations depend on the specific graph topology seen at training time. Edge noise or missing edges can noticeably impact quality.
+
+---
+
+## 9. What's Next
 
 This project lays a clean foundation for several exciting research directions, particularly relevant to ongoing work at NISER:
 
