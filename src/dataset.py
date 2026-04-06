@@ -108,8 +108,9 @@ def load_data(data_dir="data/cora/"):
     
     # Define standard splits: train (140), val (500), test (1000)
     idx_train = range(140)
-    idx_val = range(140, 640)
-    idx_test = range(1708, 2708)
+    idx_val = range(200, 500)
+    idx_test = range(500, 1500)
+
     
     # Convert numpy arrays & scipy sparse matrices to PyTorch tensors
     features = torch.FloatTensor(np.array(features.todense()))
