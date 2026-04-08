@@ -38,6 +38,9 @@ class GCN(nn.Module):
         Returns:
             Raw logits over classes for each node.
         """
+        # Apply dropout to input features to prevent initial overfitting
+        x = F.dropout(x, self.dropout_rate, training=self.training)
+        
         # Layer 1: Graph Convolution -> ReLU Non-linearity
         out = self.gc1(x, adj)
         out = F.relu(out)

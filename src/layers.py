@@ -54,13 +54,13 @@ class GraphConvLayer(nn.Module):
         Returns:
             Output feature matrix before non-linearity.
         """
-        # Step 1: Neighborhood aggregation
-        # Aggregate features from neighbors: \tilde{A}_{norm} H^{(l)}
-        agg = torch.sparse.mm(adj, input_features)
+        # Step 1: Linear transformation
+        # Apply the trainable weight matrix: H^{(l)} W^{(l)}
+        support = torch.mm(input_features, self.weight)
         
-        # Step 2: Linear transformation
-        # Apply the trainable weight matrix: (\tilde{A}_{norm} H^{(l)}) W^{(l)}
-        output = torch.mm(agg, self.weight)
+        # Step 2: Neighborhood aggregation
+        # Aggregate features from neighbors: \tilde{A}_{norm} (H^{(l)} W^{(l)})
+        output = torch.sparse.mm(adj, support)
         
         # Add bias if applicable
         if self.bias is not None:

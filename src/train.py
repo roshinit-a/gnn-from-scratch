@@ -23,7 +23,7 @@ def set_seed(seed: int = 42) -> None:
 WEIGHT_DECAY = 5e-4
 HIDDEN_DIM = 16
 DROPOUT = 0.5
-CHECKPOINT_DIR = "../results"
+CHECKPOINT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results")
 CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_gcn_model.pth")
 
 def accuracy(logits, labels):
@@ -65,9 +65,20 @@ def main():
     # Ensure results directory exists
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
     
+    # Hardware device dispatch
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f"Training on device: {device}")
+
     # 1. Load Data
-    adj, features, labels, idx_train, idx_val, idx_test = load_data(data_dir="../data/cora/")
+    adj, features, labels, idx_train, idx_val, idx_test = load_data()
     
+    # Map data to device
+    adj = adj.to(device)
+    features = features.to(device)
+    labels = labels.to(device)
+    idx_train = idx_train.to(device)
+    idx_val = idx_val.to(device)
+    idx_test = idx_test.to(device)
     # Extract dimensions
     n_features = features.shape[1]
     n_classes = int(labels.max().item() + 1)
@@ -78,7 +89,7 @@ def main():
     model = GCN(n_features=n_features, 
                 n_hidden=HIDDEN_DIM, 
                 n_classes=n_classes, 
-                dropout_rate=DROPOUT)
+                dropout_rate=DROPOUT).to(device)
     
     optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=WEIGHT_DECAY)
     criterion = nn.CrossEntropyLoss()
@@ -125,7 +136,7 @@ def main():
     
     # 4. Testing
     print("Loading the best model for testing...")
-    model.load_state_dict(torch.load(CHECKPOINT_PATH))
+    model.load_state_dict(torch.load(CHECKPOINT_PATH, weights_only=True))
     model.eval()
     
     with torch.no_grad():

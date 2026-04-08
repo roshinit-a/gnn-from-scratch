@@ -4,7 +4,9 @@ import numpy as np
 import scipy.sparse as sp
 import torch
 
-def download_cora(data_dir="data/cora"):
+DEFAULT_DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "cora")
+
+def download_cora(data_dir=DEFAULT_DATA_DIR):
     """
     Downloads the Cora dataset (cora.content and cora.cites) if not present.
     """
@@ -32,7 +34,8 @@ def normalize_features(features):
     Each node's feature vector sum is 1.
     """
     rowsum = np.array(features.sum(1))
-    r_inv = np.power(rowsum, -1).flatten()
+    with np.errstate(divide='ignore'):
+        r_inv = np.power(rowsum, -1).flatten()
     r_inv[np.isinf(r_inv)] = 0.
     r_mat_inv = sp.diags(r_inv)
     features = r_mat_inv.dot(features)
@@ -47,7 +50,8 @@ def normalize_adjacency(adj):
     rowsum = np.array(adj.sum(1))
     
     # 2. Compute D^{-1/2}
-    d_inv_sqrt = np.power(rowsum, -0.5).flatten()
+    with np.errstate(divide='ignore'):
+        d_inv_sqrt = np.power(rowsum, -0.5).flatten()
     d_inv_sqrt[np.isinf(d_inv_sqrt)] = 0.  # Handle division by zero for isolated nodes
     
     # 3. Create a diagonal matrix for D^{-1/2}
@@ -56,7 +60,7 @@ def normalize_adjacency(adj):
     # 4. Multiply D^{-1/2} A D^{-1/2}
     return adj.dot(d_mat_inv_sqrt).transpose().dot(d_mat_inv_sqrt).tocoo()
     
-def load_data(data_dir="data/cora/"):
+def load_data(data_dir=DEFAULT_DATA_DIR):
     """
     Loads Cora data, preprocesses it, and returns normalized A, X, and Y along with train/val/test splits.
     """
@@ -106,7 +110,7 @@ def load_data(data_dir="data/cora/"):
     # \tilde{A}_{norm} = \tilde{D}^{-1/2} \tilde{A} \tilde{D}^{-1/2}
     adj = normalize_adjacency(adj)
     
-    # Define standard splits: train (140), val (500), test (1000)
+    # Define standard splits: train (140), val (300), test (1000)
     idx_train = range(140)
     idx_val = range(200, 500)
     idx_test = range(500, 1500)
