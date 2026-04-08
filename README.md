@@ -34,7 +34,7 @@ $$H^{(l+1)} = \sigma\!\left(\tilde{D}^{-1/2}\, \tilde{A}\, \tilde{D}^{-1/2}\, H^
 **Normalization construction (implemented in `src/dataset.py`):**
 1. Start with the raw adjacency: $A$
 2. Add self-loops: $\tilde{A} = A + I$
-3. Compute degree: $\tilde{D}_{ii} = \sum_j \tilde{A}_{ij}$
+3. Compute degree: $\tilde{D}{ii} = \sum_j \tilde{A}_{ij}$
 4. Normalize: $\hat{A} = \tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}$
 
 ---
