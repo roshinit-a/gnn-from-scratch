@@ -1,11 +1,23 @@
 import os
 import time
+import random
 import argparse
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from dataset import load_data
 from model import GCN
+
+def set_seed(seed: int = 42) -> None:
+    """Pin all random-number generators for reproducibility."""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    # Ensure deterministic cuDNN ops (small perf cost, worth it for reproducibility)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 # Fixed hyperparameters (not exposed as CLI args)
 WEIGHT_DECAY = 5e-4
@@ -43,6 +55,9 @@ def main():
     parser.add_argument("--lr", type=float, default=0.01,
                         help="Learning rate for Adam optimizer (default: 0.01)")
     args = parser.parse_args()
+
+    # Fix all random seeds before anything stochastic happens
+    set_seed(42)
 
     # Ensure results directory exists
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
