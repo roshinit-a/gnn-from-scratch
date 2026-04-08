@@ -82,6 +82,8 @@ The side-by-side t-SNE below shows the hidden embeddings of all 2708 Cora nodes,
 
 ### Setup
 
+*Tested on Python 3.10+*
+
 ```bash
 # Clone the repository
 git clone https://github.com/roshinit-a/gnn-from-scratch.git
@@ -110,8 +112,10 @@ The Cora dataset is **downloaded automatically** on first run. Training takes ~1
 You can also override the default hyperparameters via CLI:
 
 ```bash
-python train.py --epochs 300 --lr 0.005
+python train.py --epochs 300 --lr 0.005 --seed 42
 ```
+
+> **Note:** A fixed random seed (`--seed 42`) is set by default to ensure reproducibility. Without this, accuracy results will fluctuate between runs due to random weight initialization, train/val/test splits, and dropout masks.
 
 ### Explore Notebooks
 

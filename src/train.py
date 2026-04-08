@@ -48,16 +48,19 @@ def main():
     Supports CLI arguments:
         --epochs  Number of training epochs (default: 200)
         --lr      Learning rate for the Adam optimizer (default: 0.01)
+        --seed    Random seed for reproducibility (default: 42)
     """
     parser = argparse.ArgumentParser(description="Train a 2-layer GCN on the Cora dataset.")
     parser.add_argument("--epochs", type=int, default=200,
                         help="Number of training epochs (default: 200)")
     parser.add_argument("--lr", type=float, default=0.01,
                         help="Learning rate for Adam optimizer (default: 0.01)")
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Random seed for reproducibility (default: 42)")
     args = parser.parse_args()
 
     # Fix all random seeds before anything stochastic happens
-    set_seed(42)
+    set_seed(args.seed)
 
     # Ensure results directory exists
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
