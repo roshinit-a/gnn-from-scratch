@@ -89,7 +89,10 @@ cd gnn-from-scratch
 
 # Create and activate a virtual environment
 python -m venv .venv
+# On Linux/macOS:
 source .venv/bin/activate
+# On Windows:
+# .venv\Scripts\activate
 
 # Install dependencies (pinned versions)
 pip install -r requirements.txt
@@ -164,7 +167,8 @@ gnn-from-scratch/
 │   └── train.py          # Training loop + checkpointing
 ├── results/              # Saved model + plots
 ├── README.md
-└── requirements.txt
+├── requirements.txt
+└── LICENSE
 ```
 
 ---
