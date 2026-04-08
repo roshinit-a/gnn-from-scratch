@@ -26,7 +26,7 @@ $$H^{(l+1)} = \sigma\!\left(\tilde{D}^{-1/2}\, \tilde{A}\, \tilde{D}^{-1/2}\, H^
 |--------|---------|
 | $H^{(l)}$ | Node feature matrix at layer $l$. At $l=0$, this is the raw input $X \in \mathbb{R}^{N \times F}$ |
 | $\tilde{A} = A + I$ | Adjacency matrix **with self-loops** added so each node includes its own features |
-| $\tilde{D}$ | Diagonal degree matrix of $\tilde{A}$; $\tilde{D}_{ii} = \sum_j \tilde{A}_{ij}$ |
+| $\tilde{D}$ | Diagonal degree matrix of $\tilde{A}$; $\tilde{D}\_{ii} = \sum\_j \tilde{A}\_{ij}$ |
 | $\tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}$ | Symmetric normalization — prevents high-degree nodes from dominating the aggregation |
 | $W^{(l)}$ | Trainable weight matrix at layer $l$, learned via gradient descent |
 | $\sigma$ | Non-linear activation (ReLU after layer 1; none / softmax after layer 2) |
@@ -34,7 +34,7 @@ $$H^{(l+1)} = \sigma\!\left(\tilde{D}^{-1/2}\, \tilde{A}\, \tilde{D}^{-1/2}\, H^
 **Normalization construction (implemented in `src/dataset.py`):**
 1. Start with the raw adjacency: $A$
 2. Add self-loops: $\tilde{A} = A + I$
-3. Compute degree: $\tilde{D}_{ii} = \sum_j \tilde{A}_{ij}$
+3. Compute degree: $\tilde{D}\_{ii} = \sum\_j \tilde{A}\_{ij}$
 4. Normalize: $\hat{A} = \tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}$
 
 ---
