@@ -34,7 +34,7 @@ class GraphConvLayer(nn.Module):
         self.reset_parameters()
 
     def reset_parameters(self):
-        """
+        """1
         Initializes weights using Glorot uniform initialization.
         Uniform distribution in [-1/sqrt(fan_out), 1/sqrt(fan_out)].
         """

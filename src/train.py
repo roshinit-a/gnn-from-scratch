@@ -57,7 +57,7 @@ def main():
                         help="Learning rate for Adam optimizer (default: 0.01)")
     parser.add_argument("--seed", type=int, default=42,
                         help="Random seed for reproducibility (default: 42)")
-    args = parser.parse_args()
+    args, _ = parser.parse_known_args()
 
     # Fix all random seeds before anything stochastic happens
     set_seed(args.seed)
@@ -91,7 +91,11 @@ def main():
                 n_classes=n_classes, 
                 dropout_rate=DROPOUT).to(device)
     
-    optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=WEIGHT_DECAY)
+    # Weight decay is only applied to the first graph convolution layer
+    optimizer = optim.Adam([
+        dict(params=model.gc1.parameters(), weight_decay=WEIGHT_DECAY),
+        dict(params=model.gc2.parameters(), weight_decay=0)
+    ], lr=args.lr)
     criterion = nn.CrossEntropyLoss()
     
     best_val_acc = 0.0
